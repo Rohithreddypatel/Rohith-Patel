@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "gift-guide-banner": {
+      "type": "gift-guide-banner",
+      "settings": {
+        "brand_name": "TISSO VISON",
+        "tagline": "Find the ideal gift for your loved ones.",
+        "choose_gift_label": "CHOOSE GIFT",
+        "choose_gift_url": "",
+        "heading": "The Gift Guide",
+        "description": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
+        "shop_now_label": "SHOP NOW",
+        "shop_now_url": "",
+        "ticker_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
+      }
+    }
+  },
+  "order": ["gift-guide-banner"]
+}
