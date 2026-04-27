@@ -23,9 +23,24 @@
         "shop_now_url": "",
         "ticker_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
       }
+    },
+    "gift-guide-gride": {
+      "type": "gift-guide-gride",
+      "blocks": [
+        { "type": "product_item"},
+        { "type": "product_item"},
+        { "type": "product_item"},
+        { "type": "product_item"},
+        { "type": "product_item"},
+        { "type": "product_item"}
+      ],
+      "setting": {
+        "section_title": "Tisso vison in the wild"
+      }
     }
   },
   "order": [
-    "gift-guide-banner"
+    "gift-guide-banner",
+    "gift-guide-grid"
   ]
 }

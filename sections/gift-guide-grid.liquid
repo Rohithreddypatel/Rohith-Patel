@@ -1,0 +1,794 @@
+{% comment %}
+  ============================================================
+  Section : gift-guide-grid.liquid
+  Purpose : 3x2 product grid with popup and Add to Cart
+  Rules   : No jQuery – vanilla JS only
+             Products selectable from customizer
+             Add to Cart must be functional
+             Special rule: Black + Medium → auto add Soft Winter Jacket
+  ============================================================
+{% endcomment %}
+
+<section
+  class="gg-grid"
+  id="gg-grid-{{ section.id }}"
+  aria-label="{{ section.settings.section_title | escape }}"
+>
+
+  <!-- ── SECTION TITLE ─────────────────────────────────── -->
+  <h2 class="gg-grid__title">{{ section.settings.section_title }}</h2>
+
+  <!-- ── PRODUCT GRID ──────────────────────────────────── -->
+  <div class="gg-grid__container">
+    {% for block in section.blocks %}
+      {% assign product = block.settings.product %}
+      {% if product != blank %}
+        <div
+          class="gg-grid__item"
+          {{ block.shopify_attributes }}
+          data-product-id="{{ product.id }}"
+        >
+          <div class="gg-grid__image-wrap">
+            {% if product.featured_image %}
+              <img
+                class="gg-grid__image"
+                src="{{ product.featured_image | image_url: width: 800 }}"
+                alt="{{ product.title | escape }}"
+                loading="lazy"
+                width="800"
+                height="800"
+              >
+            {% endif %}
+
+            <button
+              class="gg-grid__plus-btn"
+              aria-label="Quick view {{ product.title | escape }}"
+              data-product-handle="{{ product.handle }}"
+              data-product-id="{{ product.id }}"
+              data-product-title="{{ product.title | escape }}"
+              data-product-price="{{ product.price | money }}"
+              data-product-description="{{ product.description | strip_html | truncate: 120 | escape }}"
+              data-product-image="{{ product.featured_image | image_url: width: 400 }}"
+              data-product-variants="{{ product.variants | json | escape }}"
+              data-product-options="{{ product.options_with_values | json | escape }}"
+            >
+              <span aria-hidden="true">+</span>
+            </button>
+          </div>
+        </div>
+      {% else %}
+        <div class="gg-grid__item gg-grid__item--empty" {{ block.shopify_attributes }}>
+          <div class="gg-grid__image-wrap">
+            <div class="gg-grid__placeholder"></div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- ── POPUP OVERLAY ─────────────────────────────────── -->
+  <div
+    class="gg-popup__overlay"
+    id="gg-popup-overlay-{{ section.id }}"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Product quick view"
+    aria-hidden="true"
+  >
+    <div class="gg-popup__box">
+
+      <button
+        class="gg-popup__close"
+        id="gg-popup-close-{{ section.id }}"
+        aria-label="Close popup"
+      >
+        &#x2715;
+      </button>
+
+      <div class="gg-popup__image-wrap">
+        <img
+          class="gg-popup__image"
+          id="gg-popup-image-{{ section.id }}"
+          src=""
+          alt=""
+          width="200"
+          height="200"
+        >
+      </div>
+
+      <div class="gg-popup__details">
+        <h3 class="gg-popup__title" id="gg-popup-title-{{ section.id }}"></h3>
+        <p  class="gg-popup__price" id="gg-popup-price-{{ section.id }}"></p>
+        <p  class="gg-popup__description" id="gg-popup-desc-{{ section.id }}"></p>
+        <div class="gg-popup__variants" id="gg-popup-variants-{{ section.id }}"></div>
+        <button
+          class="gg-popup__atc-btn"
+          id="gg-popup-atc-{{ section.id }}"
+          aria-label="Add to cart"
+        >
+          <span class="gg-btn__label">ADD TO CART</span>
+          <span class="gg-btn__arrow" aria-hidden="true">→</span>
+        </button>
+        <p
+          class="gg-popup__feedback"
+          id="gg-popup-feedback-{{ section.id }}"
+          aria-live="polite"
+        ></p>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+{% stylesheet %}
+/* ============================================================
+   Gift Guide Grid – Scoped Styles
+   All selectors prefixed with .gg-grid / .gg-popup to avoid
+   collisions with Dawn's existing CSS
+   ============================================================ */
+
+.gg-grid {
+  --gg-grid-gap    : 30px;
+  --gg-grid-cols   : 3;
+  --gg-title-color : #111111;
+  --gg-plus-bg     : #ffffff;
+  --gg-plus-color  : #111111;
+  --gg-plus-size   : 36px;
+  --gg-transition  : 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  width: 100%;
+  max-width: 1337px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  box-sizing: border-box;
+}
+
+/* ── Section Title ──────────────────────────────────────── */
+.gg-grid__title {
+  font-size: 1.2rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--gg-title-color);
+  margin: 0 0 20px 0;
+  letter-spacing: 0.01em;
+}
+
+/* ── Grid Container ─────────────────────────────────────── */
+.gg-grid__container {
+  display: grid;
+  grid-template-columns: repeat(var(--gg-grid-cols), 1fr);
+  gap: var(--gg-grid-gap);
+}
+
+/* ── Grid Item ──────────────────────────────────────────── */
+.gg-grid__item {
+  position: relative;
+  overflow: hidden;
+}
+
+.gg-grid__image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.gg-grid__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.gg-grid__item:hover .gg-grid__image {
+  transform: scale(1.04);
+}
+
+.gg-grid__placeholder {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #e8e8e8 0px,
+    #e8e8e8 1px,
+    #f5f5f5 1px,
+    #f5f5f5 20px
+  );
+}
+
+/* ── Plus Button ────────────────────────────────────────── */
+.gg-grid__plus-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: var(--gg-plus-size);
+  height: var(--gg-plus-size);
+  border-radius: 50%;
+  background: var(--gg-plus-bg);
+  color: var(--gg-plus-color);
+  border: 1.5px solid #cccccc;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--gg-transition),
+    color var(--gg-transition),
+    transform var(--gg-transition);
+  z-index: 2;
+  padding: 0;
+}
+
+.gg-grid__plus-btn:hover {
+  background: var(--gg-plus-color);
+  color: var(--gg-plus-bg);
+  transform: scale(1.1);
+}
+
+/* ── Popup Overlay ──────────────────────────────────────── */
+.gg-popup__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+.gg-popup__overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ── Popup Box ──────────────────────────────────────────── */
+.gg-popup__box {
+  background: #ffffff;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.gg-popup__overlay.is-open .gg-popup__box {
+  transform: translateY(0);
+}
+
+/* ── Popup Close Button ─────────────────────────────────── */
+.gg-popup__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #111;
+  padding: 4px;
+  line-height: 1;
+  z-index: 2;
+}
+
+.gg-popup__close:hover {
+  opacity: 0.6;
+}
+
+/* ── Popup Image ────────────────────────────────────────── */
+.gg-popup__image-wrap {
+  flex-shrink: 0;
+  width: 160px;
+}
+
+.gg-popup__image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Popup Details ──────────────────────────────────────── */
+.gg-popup__details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gg-popup__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.gg-popup__price {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+}
+
+.gg-popup__description {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: #555;
+  margin: 0;
+}
+
+/* ── Variant Options ────────────────────────────────────── */
+.gg-popup__variants {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gg-variant__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111;
+  margin: 0 0 6px;
+}
+
+.gg-variant__color-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.gg-variant__color-btn {
+  padding: 6px 16px;
+  border: 1.5px solid #cccccc;
+  background: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--gg-transition),
+    color var(--gg-transition),
+    border-color var(--gg-transition);
+}
+
+.gg-variant__color-btn.is-selected,
+.gg-variant__color-btn:hover {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+
+.gg-variant__size-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid #cccccc;
+  background: #ffffff;
+  font-size: 0.78rem;
+  cursor: pointer;
+  appearance: auto;
+}
+
+/* ── Add to Cart Button ─────────────────────────────────── */
+.gg-popup__atc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 24px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 2px solid #111111;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+  margin-top: auto;
+}
+
+.gg-popup__atc-btn:hover {
+  opacity: 0.85;
+}
+
+.gg-popup__atc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Feedback Message ───────────────────────────────────── */
+.gg-popup__feedback {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 0;
+  min-height: 20px;
+}
+
+.gg-popup__feedback.is-success { color: #2a7a2a; }
+.gg-popup__feedback.is-error   { color: #cc0000; }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .gg-grid {
+    --gg-grid-cols: 2;
+    padding: 32px 16px;
+  }
+
+  .gg-popup__box {
+    flex-direction: column;
+    padding: 24px 20px;
+    max-width: 100%;
+  }
+
+  .gg-popup__image-wrap {
+    width: 100%;
+  }
+
+  .gg-popup__image {
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gg-grid {
+    --gg-grid-cols: 2;
+    --gg-grid-gap: 12px;
+  }
+}
+{% endstylesheet %}
+
+
+{% javascript %}
+/**
+ * Gift Guide Grid – Vanilla JS
+ * -------------------------------------------------------
+ * Responsibilities:
+ *   1. Open popup when "+" button is clicked
+ *   2. Render variant options dynamically
+ *   3. Handle Add to Cart via Shopify AJAX API
+ *   4. Special rule: if Color=Black AND Size=Medium
+ *      → also add "Soft Winter Jacket" to cart
+ *   5. Close popup on overlay click or close button
+ * -------------------------------------------------------
+ * No jQuery used.
+ */
+(function () {
+  'use strict';
+
+  var sectionId  = '{{ section.id }}';
+  var overlay    = document.getElementById('gg-popup-overlay-'  + sectionId);
+  var closeBtn   = document.getElementById('gg-popup-close-'    + sectionId);
+  var popupImage = document.getElementById('gg-popup-image-'    + sectionId);
+  var popupTitle = document.getElementById('gg-popup-title-'    + sectionId);
+  var popupPrice = document.getElementById('gg-popup-price-'    + sectionId);
+  var popupDesc  = document.getElementById('gg-popup-desc-'     + sectionId);
+  var popupVars  = document.getElementById('gg-popup-variants-' + sectionId);
+  var atcBtn     = document.getElementById('gg-popup-atc-'      + sectionId);
+  var feedback   = document.getElementById('gg-popup-feedback-' + sectionId);
+
+  var activeVariants = [];
+  var activeOptions  = [];
+
+  /* ── Open Popup ─────────────────────────────────────── */
+  function openPopup(btn) {
+    var title       = btn.dataset.productTitle;
+    var price       = btn.dataset.productPrice;
+    var description = btn.dataset.productDescription;
+    var image       = btn.dataset.productImage;
+
+    try {
+      activeVariants = JSON.parse(btn.dataset.productVariants);
+      activeOptions  = JSON.parse(btn.dataset.productOptions);
+    } catch (e) {
+      activeVariants = [];
+      activeOptions  = [];
+    }
+
+    popupImage.src         = image;
+    popupImage.alt         = title;
+    popupTitle.textContent = title;
+    popupPrice.textContent = price;
+    popupDesc.textContent  = description;
+
+    setFeedback('', '');
+    renderVariants();
+
+    overlay.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  /* ── Close Popup ────────────────────────────────────── */
+  function closePopup() {
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── Render Variants ────────────────────────────────── */
+  function renderVariants() {
+    popupVars.innerHTML = '';
+
+    activeOptions.forEach(function (option) {
+      var wrapper = document.createElement('div');
+      var label   = document.createElement('p');
+      label.className   = 'gg-variant__label';
+      label.textContent = option.name;
+      wrapper.appendChild(label);
+
+      var nameLower = option.name.toLowerCase();
+
+      if (nameLower === 'color' || nameLower === 'colour') {
+        var btnGroup = document.createElement('div');
+        btnGroup.className          = 'gg-variant__color-options';
+        btnGroup.dataset.optionName = option.name;
+
+        option.values.forEach(function (value, index) {
+          var btn       = document.createElement('button');
+          btn.className     = 'gg-variant__color-btn';
+          btn.textContent   = value;
+          btn.dataset.value = value;
+          btn.type          = 'button';
+          if (index === 0) btn.classList.add('is-selected');
+
+          btn.addEventListener('click', function () {
+            Array.from(btnGroup.querySelectorAll('.gg-variant__color-btn'))
+              .forEach(function (b) { b.classList.remove('is-selected'); });
+            btn.classList.add('is-selected');
+          });
+
+          btnGroup.appendChild(btn);
+        });
+
+        wrapper.appendChild(btnGroup);
+
+      } else {
+        var select = document.createElement('select');
+        select.className          = 'gg-variant__size-select';
+        select.dataset.optionName = option.name;
+
+        var placeholder         = document.createElement('option');
+        placeholder.value       = '';
+        placeholder.textContent = 'Choose your ' + option.name.toLowerCase();
+        placeholder.disabled    = true;
+        placeholder.selected    = true;
+        select.appendChild(placeholder);
+
+        option.values.forEach(function (value) {
+          var opt         = document.createElement('option');
+          opt.value       = value;
+          opt.textContent = value;
+          select.appendChild(opt);
+        });
+
+        wrapper.appendChild(select);
+      }
+
+      popupVars.appendChild(wrapper);
+    });
+  }
+
+  /* ── Get Selected Options ───────────────────────────── */
+  function getSelectedOptions() {
+    var results = [];
+
+    activeOptions.forEach(function (option) {
+      var nameLower = option.name.toLowerCase();
+
+      if (nameLower === 'color' || nameLower === 'colour') {
+        var selected = popupVars.querySelector(
+          '[data-option-name="' + option.name + '"] .gg-variant__color-btn.is-selected'
+        );
+        results.push(selected ? selected.dataset.value : '');
+      } else {
+        var select = popupVars.querySelector(
+          '[data-option-name="' + option.name + '"]'
+        );
+        results.push(select ? select.value : '');
+      }
+    });
+
+    return results;
+  }
+
+  /* ── Get Selected Variant ID ────────────────────────── */
+  function getSelectedVariantId() {
+    var selectedOptions = getSelectedOptions();
+
+    var match = activeVariants.find(function (variant) {
+      return variant.options.every(function (opt, i) {
+        return opt === selectedOptions[i];
+      });
+    });
+
+    return match ? match.id : null;
+  }
+
+  /* ── Add to Cart via AJAX ───────────────────────────── */
+  function addToCart(items) {
+    return fetch(window.routes.cart_add_url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: items })
+    }).then(function (res) {
+      if (!res.ok) throw new Error('Cart error');
+      return res.json();
+    });
+  }
+
+  /* ── Get Soft Winter Jacket Variant (Black + Medium) ── */
+  function getSoftWinterJacketVariantId() {
+    return fetch('/products/soft-winter-jacket.js')
+      .then(function (res) {
+        if (!res.ok) throw new Error('Not found');
+        return res.json();
+      })
+      .then(function (product) {
+        var match = product.variants.find(function (v) {
+          var opts = v.options.map(function (o) {
+            return o.toLowerCase();
+          });
+          return opts.includes('black') && opts.includes('medium');
+        });
+        return match ? match.id : null;
+      })
+      .catch(function () { return null; });
+  }
+
+  /* ── Feedback ───────────────────────────────────────── */
+  function setFeedback(message, type) {
+    feedback.textContent = message;
+    feedback.className   = 'gg-popup__feedback ' + type;
+  }
+
+  /* ── Refresh Dawn Cart Bubble ───────────────────────── */
+  function refreshCartBubble() {
+    fetch('/?section_id=cart-icon-bubble')
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var doc       = new DOMParser().parseFromString(html, 'text/html');
+        var newBubble = doc.querySelector('cart-icon-bubble');
+        var oldBubble = document.querySelector('cart-icon-bubble');
+        if (newBubble && oldBubble) {
+          oldBubble.innerHTML = newBubble.innerHTML;
+        }
+      });
+  }
+
+  /* ── ATC Button Click Handler ───────────────────────── */
+  atcBtn.addEventListener('click', function () {
+    var selectedOptions = getSelectedOptions();
+    var variantId       = getSelectedVariantId();
+
+    if (!variantId) {
+      setFeedback('Please select all options.', 'is-error');
+      return;
+    }
+
+    atcBtn.disabled = true;
+    setFeedback('Adding...', '');
+
+    var items = [{ id: variantId, quantity: 1 }];
+
+    /* Special rule check */
+    var hasBlack  = selectedOptions.some(function (o) {
+      return o.toLowerCase() === 'black';
+    });
+    var hasMedium = selectedOptions.some(function (o) {
+      return o.toLowerCase() === 'medium';
+    });
+
+    var cartPromise;
+
+    if (hasBlack && hasMedium) {
+      cartPromise = getSoftWinterJacketVariantId()
+        .then(function (jacketId) {
+          if (jacketId) items.push({ id: jacketId, quantity: 1 });
+          return addToCart(items);
+        });
+    } else {
+      cartPromise = addToCart(items);
+    }
+
+    cartPromise
+      .then(function () {
+        setFeedback('✓ Added to cart!', 'is-success');
+        atcBtn.disabled = false;
+        refreshCartBubble();
+      })
+      .catch(function () {
+        setFeedback('Something went wrong. Try again.', 'is-error');
+        atcBtn.disabled = false;
+      });
+  });
+
+  /* ── Event Listeners ────────────────────────────────── */
+  var section = document.getElementById('gg-grid-' + sectionId);
+  if (section) {
+    section.addEventListener('click', function (e) {
+      var btn = e.target.closest('.gg-grid__plus-btn');
+      if (btn) openPopup(btn);
+    });
+  }
+
+  closeBtn.addEventListener('click', closePopup);
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closePopup();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+      closePopup();
+    }
+  });
+
+}());
+{% endjavascript %}
+
+
+{% schema %}
+{
+  "name": "Gift Guide Grid",
+  "tag": "section",
+  "class": "gift-guide-grid-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Tisso vison in the wild"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_item",
+      "name": "Product Item",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Guide Grid",
+      "blocks": [
+        { "type": "product_item" },
+        { "type": "product_item" },
+        { "type": "product_item" },
+        { "type": "product_item" },
+        { "type": "product_item" },
+        { "type": "product_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
