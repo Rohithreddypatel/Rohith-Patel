@@ -25,7 +25,7 @@
       }
     },
     "gift-guide-gride": {
-      "type": "gift-guide-gride",
+      "type": "gift-guide-grid",
       "blocks": [
         { "type": "product_item"},
         { "type": "product_item"},
