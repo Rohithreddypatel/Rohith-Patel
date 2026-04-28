@@ -136,6 +136,8 @@
     var activeVariants = [];
     var activeOptions  = [];
 
+    /* ── Open / Close ─────────────────────────────────────── */
+
     function openPopup(btn) {
       try {
         activeVariants = JSON.parse(btn.dataset.productVariants);
@@ -149,12 +151,13 @@
       popupTitle.textContent = btn.dataset.productTitle;
       popupPrice.textContent = btn.dataset.productPrice;
       popupDesc.textContent  = btn.dataset.productDescription;
+      atcBtn.disabled        = false;
       setFeedback('', '');
       renderVariants();
       overlay.setAttribute('aria-hidden', 'false');
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
-      setTimeout(function() { closeBtn.focus(); }, 50);
+      setTimeout(function () { closeBtn.focus(); }, 50);
     }
 
     function closePopup() {
@@ -162,6 +165,8 @@
       overlay.classList.remove('is-open');
       document.body.style.overflow = '';
     }
+
+    /* ── Render variant selectors ─────────────────────────── */
 
     function renderVariants() {
       popupVars.innerHTML = '';
@@ -171,13 +176,16 @@
         label.className   = 'gg-variant__label';
         label.textContent = option.name;
         wrapper.appendChild(label);
+
         var nameLower = option.name.toLowerCase();
+
         if (nameLower === 'color' || nameLower === 'colour') {
-          var btnGroup = document.createElement('div');
+          var btnGroup                = document.createElement('div');
           btnGroup.className          = 'gg-variant__color-options';
           btnGroup.dataset.optionName = option.name;
+
           option.values.forEach(function (value, index) {
-            var btn       = document.createElement('button');
+            var btn           = document.createElement('button');
             btn.className     = 'gg-variant__color-btn';
             btn.textContent   = value;
             btn.dataset.value = value;
@@ -191,16 +199,19 @@
             btnGroup.appendChild(btn);
           });
           wrapper.appendChild(btnGroup);
+
         } else {
-          var select = document.createElement('select');
-          select.className          = 'gg-variant__size-select';
-          select.dataset.optionName = option.name;
-          var placeholder         = document.createElement('option');
-          placeholder.value       = '';
-          placeholder.textContent = 'Choose your ' + option.name.toLowerCase();
-          placeholder.disabled    = true;
-          placeholder.selected    = true;
+          var select                  = document.createElement('select');
+          select.className            = 'gg-variant__size-select';
+          select.dataset.optionName   = option.name;
+
+          var placeholder             = document.createElement('option');
+          placeholder.value           = '';
+          placeholder.textContent     = 'Choose your ' + option.name.toLowerCase();
+          placeholder.disabled        = true;
+          placeholder.selected        = true;
           select.appendChild(placeholder);
+
           option.values.forEach(function (value) {
             var opt         = document.createElement('option');
             opt.value       = value;
@@ -212,6 +223,8 @@
         popupVars.appendChild(wrapper);
       });
     }
+
+    /* ── Read selected options ────────────────────────────── */
 
     function getSelectedOptions() {
       var results = [];
@@ -230,8 +243,16 @@
       return results;
     }
 
+    /* ── Match variant ID from selected options ───────────── */
+
     function getSelectedVariantId() {
       var selectedOptions = getSelectedOptions();
+
+      // Reject if any option is still unselected
+      if (selectedOptions.some(function (o) { return o === '' || o === null; })) {
+        return null;
+      }
+
       var match = activeVariants.find(function (variant) {
         return variant.options.every(function (opt, i) {
           return opt === selectedOptions[i];
@@ -240,16 +261,21 @@
       return match ? match.id : null;
     }
 
-    function addToCart(items) {
-      return fetch(window.routes.cart_add_url, {
+    /* ── Cart fetch ───────────────────────────────────────── */
+
+    // FIX: takes variantId (number) + quantity directly — not an items array
+    function addToCart(variantId, quantity) {
+      return fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: items })
+        body: JSON.stringify({ id: variantId, quantity: quantity || 1 })
       }).then(function (res) {
         if (!res.ok) throw new Error('Cart error');
         return res.json();
       });
     }
+
+    /* ── Special rule: fetch Soft Winter Jacket Black/Medium variant ── */
 
     function getSoftWinterJacketVariantId() {
       return fetch('/products/soft-winter-jacket.js')
@@ -267,10 +293,14 @@
         .catch(function () { return null; });
     }
 
+    /* ── UI feedback ──────────────────────────────────────── */
+
     function setFeedback(message, type) {
       feedback.textContent = message;
       feedback.className   = 'gg-popup__feedback ' + type;
     }
+
+    /* ── Refresh cart icon bubble in header ───────────────── */
 
     function refreshCartBubble() {
       fetch('/?section_id=cart-icon-bubble')
@@ -282,36 +312,48 @@
           if (newBubble && oldBubble) {
             oldBubble.innerHTML = newBubble.innerHTML;
           }
-        });
+        })
+        .catch(function () { /* non-critical */ });
     }
+
+    /* ── Add to Cart button click ─────────────────────────── */
 
     atcBtn.addEventListener('click', function () {
       var selectedOptions = getSelectedOptions();
       var variantId       = getSelectedVariantId();
+
       if (!variantId) {
         setFeedback('Please select all options.', 'is-error');
         return;
       }
+
       atcBtn.disabled = true;
       setFeedback('Adding...', '');
-      var items = [{ id: variantId, quantity: 1 }];
+
+      // Special rule: Black + Medium → also add Soft Winter Jacket automatically
       var hasBlack  = selectedOptions.some(function (o) { return o.toLowerCase() === 'black'; });
       var hasMedium = selectedOptions.some(function (o) { return o.toLowerCase() === 'medium'; });
+
       var cartPromise;
+
       if (hasBlack && hasMedium) {
-        cartPromise = getSoftWinterJacketVariantId()
+        cartPromise = addToCart(variantId, 1)
+          .then(function () {
+            return getSoftWinterJacketVariantId();
+          })
           .then(function (jacketId) {
-            if (jacketId) items.push({ id: jacketId, quantity: 1 });
-            return addToCart(items);
+            if (jacketId) return addToCart(jacketId, 1);
           });
       } else {
-        cartPromise = addToCart(items);
+        cartPromise = addToCart(variantId, 1);
       }
+
       cartPromise
         .then(function () {
-          setFeedback('Added to cart!', 'is-success');
+          setFeedback('✅ Added to cart!', 'is-success');
           atcBtn.disabled = false;
           refreshCartBubble();
+          setTimeout(function () { closePopup(); }, 1800);
         })
         .catch(function () {
           setFeedback('Something went wrong. Try again.', 'is-error');
@@ -319,13 +361,17 @@
         });
     });
 
-    var section = document.getElementById('gg-grid-' + sectionId);
-    if (section) {
-      section.addEventListener('click', function (e) {
+    /* ── Grid click → open popup ──────────────────────────── */
+
+    var gridSection = document.getElementById('gg-grid-' + sectionId);
+    if (gridSection) {
+      gridSection.addEventListener('click', function (e) {
         var btn = e.target.closest('.gg-grid__plus-btn');
         if (btn) openPopup(btn);
       });
     }
+
+    /* ── Close handlers ───────────────────────────────────── */
 
     closeBtn.addEventListener('click', closePopup);
 
@@ -340,7 +386,7 @@
     });
 
   }());
-  </script>
+</script>
 
 </section>
 
