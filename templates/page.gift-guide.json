@@ -24,23 +24,62 @@
         "ticker_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
       }
     },
-    "gift-guide-grid": {
+    "gift_guide_grid_CY9P33": {
       "type": "gift-guide-grid",
-      "blocks": [
-        { "type": "product_item"},
-        { "type": "product_item"},
-        { "type": "product_item"},
-        { "type": "product_item"},
-        { "type": "product_item"},
-        { "type": "product_item"}
+      "blocks": {
+        "product_item_3FfKyL": {
+          "type": "product_item",
+          "settings": {
+            "product": "black-leather-bag"
+          }
+        },
+        "product_item_WBBefi": {
+          "type": "product_item",
+          "settings": {
+            "product": "blue-silk-tuxedo"
+          }
+        },
+        "product_item_3tQfMT": {
+          "type": "product_item",
+          "settings": {
+            "product": "chequered-red-shirt"
+          }
+        },
+        "product_item_jgKttd": {
+          "type": "product_item",
+          "settings": {
+            "product": "classic-leather-jacket"
+          }
+        },
+        "product_item_DMGTVb": {
+          "type": "product_item",
+          "settings": {
+            "product": "classic-varsity-top"
+          }
+        },
+        "product_item_cYyCHn": {
+          "type": "product_item",
+          "settings": {
+            "product": "dark-winter-jacket"
+          }
+        }
+      },
+      "block_order": [
+        "product_item_3FfKyL",
+        "product_item_WBBefi",
+        "product_item_3tQfMT",
+        "product_item_jgKttd",
+        "product_item_DMGTVb",
+        "product_item_cYyCHn"
       ],
-      "setting": {
+      "name": "Gift Guide Grid",
+      "settings": {
         "section_title": "Tisso vison in the wild"
       }
     }
   },
   "order": [
     "gift-guide-banner",
-    "gift-guide-grid"
+    "gift_guide_grid_CY9P33"
   ]
 }
