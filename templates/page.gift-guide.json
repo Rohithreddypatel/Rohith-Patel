@@ -24,7 +24,7 @@
         "ticker_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
       }
     },
-    "gift-guide-gride": {
+    "gift-guide-grid": {
       "type": "gift-guide-grid",
       "blocks": [
         { "type": "product_item"},
