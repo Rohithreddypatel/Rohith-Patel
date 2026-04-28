@@ -154,7 +154,7 @@
       overlay.setAttribute('aria-hidden', 'false');
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
-      closeBtn.focus();
+      setTimeout(function() { closeBtn.focus(); }, 50);
     }
 
     function closePopup() {
