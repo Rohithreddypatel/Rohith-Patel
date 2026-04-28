@@ -2,10 +2,10 @@
   ============================================================
   Section : gift-guide-grid.liquid
   Purpose : 3x2 product grid with popup and Add to Cart
-  Rules   : No jQuery – vanilla JS only
+  Rules   : No jQuery - vanilla JS only
              Products selectable from customizer
              Add to Cart must be functional
-             Special rule: Black + Medium → auto add Soft Winter Jacket
+             Special rule: Black + Medium = auto add Soft Winter Jacket
   ============================================================
 {% endcomment %}
 
@@ -15,10 +15,10 @@
   aria-label="{{ section.settings.section_title | escape }}"
 >
 
-  <!-- ── SECTION TITLE ─────────────────────────────────── -->
+  <!-- SECTION TITLE -->
   <h2 class="gg-grid__title">{{ section.settings.section_title }}</h2>
 
-  <!-- ── PRODUCT GRID ──────────────────────────────────── -->
+  <!-- PRODUCT GRID -->
   <div class="gg-grid__container">
     {% for block in section.blocks %}
       {% assign product = block.settings.product %}
@@ -39,7 +39,6 @@
                 height="800"
               >
             {% endif %}
-
             <button
               class="gg-grid__plus-btn"
               aria-label="Quick view {{ product.title | escape }}"
@@ -66,7 +65,7 @@
     {% endfor %}
   </div>
 
-  <!-- ── POPUP OVERLAY ─────────────────────────────────── -->
+  <!-- POPUP OVERLAY -->
   <div
     class="gg-popup__overlay"
     id="gg-popup-overlay-{{ section.id }}"
@@ -98,8 +97,8 @@
 
       <div class="gg-popup__details">
         <h3 class="gg-popup__title" id="gg-popup-title-{{ section.id }}"></h3>
-        <p  class="gg-popup__price" id="gg-popup-price-{{ section.id }}"></p>
-        <p  class="gg-popup__description" id="gg-popup-desc-{{ section.id }}"></p>
+        <p class="gg-popup__price" id="gg-popup-price-{{ section.id }}"></p>
+        <p class="gg-popup__description" id="gg-popup-desc-{{ section.id }}"></p>
         <div class="gg-popup__variants" id="gg-popup-variants-{{ section.id }}"></div>
         <button
           class="gg-popup__atc-btn"
@@ -121,23 +120,13 @@
 
 </section>
 
-
 {% stylesheet %}
-/* ============================================================
-   Gift Guide Grid – Scoped Styles
-   All selectors prefixed with .gg-grid / .gg-popup to avoid
-   collisions with Dawn's existing CSS
-   ============================================================ */
 
 .gg-grid {
-  --gg-grid-gap    : 30px;
-  --gg-grid-cols   : 3;
-  --gg-title-color : #111111;
-  --gg-plus-bg     : #ffffff;
-  --gg-plus-color  : #111111;
-  --gg-plus-size   : 36px;
-  --gg-transition  : 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-
+  --gg-grid-gap   : 30px;
+  --gg-grid-cols  : 3;
+  --gg-plus-size  : 36px;
+  --gg-transition : 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
   max-width: 1337px;
   margin: 0 auto;
@@ -145,24 +134,20 @@
   box-sizing: border-box;
 }
 
-/* ── Section Title ──────────────────────────────────────── */
 .gg-grid__title {
   font-size: 1.2rem;
   font-weight: 400;
   font-style: italic;
-  color: var(--gg-title-color);
+  color: #111111;
   margin: 0 0 20px 0;
-  letter-spacing: 0.01em;
 }
 
-/* ── Grid Container ─────────────────────────────────────── */
 .gg-grid__container {
   display: grid;
   grid-template-columns: repeat(var(--gg-grid-cols), 1fr);
   gap: var(--gg-grid-gap);
 }
 
-/* ── Grid Item ──────────────────────────────────────────── */
 .gg-grid__item {
   position: relative;
   overflow: hidden;
@@ -200,7 +185,6 @@
   );
 }
 
-/* ── Plus Button ────────────────────────────────────────── */
 .gg-grid__plus-btn {
   position: absolute;
   top: 12px;
@@ -208,30 +192,25 @@
   width: var(--gg-plus-size);
   height: var(--gg-plus-size);
   border-radius: 50%;
-  background: var(--gg-plus-bg);
-  color: var(--gg-plus-color);
+  background: #ffffff;
+  color: #111111;
   border: 1.5px solid #cccccc;
   font-size: 1.2rem;
-  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    background var(--gg-transition),
-    color var(--gg-transition),
-    transform var(--gg-transition);
+  transition: background var(--gg-transition), color var(--gg-transition), transform var(--gg-transition);
   z-index: 2;
   padding: 0;
 }
 
 .gg-grid__plus-btn:hover {
-  background: var(--gg-plus-color);
-  color: var(--gg-plus-bg);
+  background: #111111;
+  color: #ffffff;
   transform: scale(1.1);
 }
 
-/* ── Popup Overlay ──────────────────────────────────────── */
 .gg-popup__overlay {
   position: fixed;
   inset: 0;
@@ -244,9 +223,7 @@
   box-sizing: border-box;
   opacity: 0;
   visibility: hidden;
-  transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .gg-popup__overlay.is-open {
@@ -254,7 +231,6 @@
   visibility: visible;
 }
 
-/* ── Popup Box ──────────────────────────────────────────── */
 .gg-popup__box {
   background: #ffffff;
   width: 100%;
@@ -275,7 +251,6 @@
   transform: translateY(0);
 }
 
-/* ── Popup Close Button ─────────────────────────────────── */
 .gg-popup__close {
   position: absolute;
   top: 12px;
@@ -284,7 +259,7 @@
   border: none;
   font-size: 1.1rem;
   cursor: pointer;
-  color: #111;
+  color: #111111;
   padding: 4px;
   line-height: 1;
   z-index: 2;
@@ -294,7 +269,6 @@
   opacity: 0.6;
 }
 
-/* ── Popup Image ────────────────────────────────────────── */
 .gg-popup__image-wrap {
   flex-shrink: 0;
   width: 160px;
@@ -307,7 +281,6 @@
   display: block;
 }
 
-/* ── Popup Details ──────────────────────────────────────── */
 .gg-popup__details {
   flex: 1;
   display: flex;
@@ -318,25 +291,24 @@
 .gg-popup__title {
   font-size: 1rem;
   font-weight: 700;
-  color: #111;
+  color: #111111;
   margin: 0;
 }
 
 .gg-popup__price {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #111;
+  color: #111111;
   margin: 0;
 }
 
 .gg-popup__description {
   font-size: 0.78rem;
   line-height: 1.55;
-  color: #555;
+  color: #555555;
   margin: 0;
 }
 
-/* ── Variant Options ────────────────────────────────────── */
 .gg-popup__variants {
   display: flex;
   flex-direction: column;
@@ -348,7 +320,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #111;
+  color: #111111;
   margin: 0 0 6px;
 }
 
@@ -365,10 +337,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background var(--gg-transition),
-    color var(--gg-transition),
-    border-color var(--gg-transition);
+  transition: background var(--gg-transition), color var(--gg-transition), border-color var(--gg-transition);
 }
 
 .gg-variant__color-btn.is-selected,
@@ -385,10 +354,8 @@
   background: #ffffff;
   font-size: 0.78rem;
   cursor: pointer;
-  appearance: auto;
 }
 
-/* ── Add to Cart Button ─────────────────────────────────── */
 .gg-popup__atc-btn {
   display: inline-flex;
   align-items: center;
@@ -403,8 +370,6 @@
   text-transform: uppercase;
   border: 2px solid #111111;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
   transition: opacity 0.2s ease;
   margin-top: auto;
 }
@@ -418,7 +383,6 @@
   cursor: not-allowed;
 }
 
-/* ── Feedback Message ───────────────────────────────────── */
 .gg-popup__feedback {
   font-size: 0.78rem;
   font-weight: 600;
@@ -429,23 +393,19 @@
 .gg-popup__feedback.is-success { color: #2a7a2a; }
 .gg-popup__feedback.is-error   { color: #cc0000; }
 
-/* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 768px) {
   .gg-grid {
     --gg-grid-cols: 2;
     padding: 32px 16px;
   }
-
   .gg-popup__box {
     flex-direction: column;
     padding: 24px 20px;
     max-width: 100%;
   }
-
   .gg-popup__image-wrap {
     width: 100%;
   }
-
   .gg-popup__image {
     height: 220px;
   }
@@ -457,23 +417,11 @@
     --gg-grid-gap: 12px;
   }
 }
+
 {% endstylesheet %}
 
-
 {% javascript %}
-/**
- * Gift Guide Grid – Vanilla JS
- * -------------------------------------------------------
- * Responsibilities:
- *   1. Open popup when "+" button is clicked
- *   2. Render variant options dynamically
- *   3. Handle Add to Cart via Shopify AJAX API
- *   4. Special rule: if Color=Black AND Size=Medium
- *      → also add "Soft Winter Jacket" to cart
- *   5. Close popup on overlay click or close button
- * -------------------------------------------------------
- * No jQuery used.
- */
+
 (function () {
   'use strict';
 
@@ -491,13 +439,7 @@
   var activeVariants = [];
   var activeOptions  = [];
 
-  /* ── Open Popup ─────────────────────────────────────── */
   function openPopup(btn) {
-    var title       = btn.dataset.productTitle;
-    var price       = btn.dataset.productPrice;
-    var description = btn.dataset.productDescription;
-    var image       = btn.dataset.productImage;
-
     try {
       activeVariants = JSON.parse(btn.dataset.productVariants);
       activeOptions  = JSON.parse(btn.dataset.productOptions);
@@ -506,11 +448,11 @@
       activeOptions  = [];
     }
 
-    popupImage.src         = image;
-    popupImage.alt         = title;
-    popupTitle.textContent = title;
-    popupPrice.textContent = price;
-    popupDesc.textContent  = description;
+    popupImage.src         = btn.dataset.productImage;
+    popupImage.alt         = btn.dataset.productTitle;
+    popupTitle.textContent = btn.dataset.productTitle;
+    popupPrice.textContent = btn.dataset.productPrice;
+    popupDesc.textContent  = btn.dataset.productDescription;
 
     setFeedback('', '');
     renderVariants();
@@ -521,14 +463,12 @@
     closeBtn.focus();
   }
 
-  /* ── Close Popup ────────────────────────────────────── */
   function closePopup() {
     overlay.setAttribute('aria-hidden', 'true');
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
   }
 
-  /* ── Render Variants ────────────────────────────────── */
   function renderVariants() {
     popupVars.innerHTML = '';
 
@@ -591,7 +531,6 @@
     });
   }
 
-  /* ── Get Selected Options ───────────────────────────── */
   function getSelectedOptions() {
     var results = [];
 
@@ -604,17 +543,16 @@
         );
         results.push(selected ? selected.dataset.value : '');
       } else {
-        var select = popupVars.querySelector(
+        var sel = popupVars.querySelector(
           '[data-option-name="' + option.name + '"]'
         );
-        results.push(select ? select.value : '');
+        results.push(sel ? sel.value : '');
       }
     });
 
     return results;
   }
 
-  /* ── Get Selected Variant ID ────────────────────────── */
   function getSelectedVariantId() {
     var selectedOptions = getSelectedOptions();
 
@@ -627,7 +565,6 @@
     return match ? match.id : null;
   }
 
-  /* ── Add to Cart via AJAX ───────────────────────────── */
   function addToCart(items) {
     return fetch(window.routes.cart_add_url, {
       method: 'POST',
@@ -639,7 +576,6 @@
     });
   }
 
-  /* ── Get Soft Winter Jacket Variant (Black + Medium) ── */
   function getSoftWinterJacketVariantId() {
     return fetch('/products/soft-winter-jacket.js')
       .then(function (res) {
@@ -648,9 +584,7 @@
       })
       .then(function (product) {
         var match = product.variants.find(function (v) {
-          var opts = v.options.map(function (o) {
-            return o.toLowerCase();
-          });
+          var opts = v.options.map(function (o) { return o.toLowerCase(); });
           return opts.includes('black') && opts.includes('medium');
         });
         return match ? match.id : null;
@@ -658,13 +592,11 @@
       .catch(function () { return null; });
   }
 
-  /* ── Feedback ───────────────────────────────────────── */
   function setFeedback(message, type) {
     feedback.textContent = message;
     feedback.className   = 'gg-popup__feedback ' + type;
   }
 
-  /* ── Refresh Dawn Cart Bubble ───────────────────────── */
   function refreshCartBubble() {
     fetch('/?section_id=cart-icon-bubble')
       .then(function (r) { return r.text(); })
@@ -678,7 +610,6 @@
       });
   }
 
-  /* ── ATC Button Click Handler ───────────────────────── */
   atcBtn.addEventListener('click', function () {
     var selectedOptions = getSelectedOptions();
     var variantId       = getSelectedVariantId();
@@ -693,13 +624,8 @@
 
     var items = [{ id: variantId, quantity: 1 }];
 
-    /* Special rule check */
-    var hasBlack  = selectedOptions.some(function (o) {
-      return o.toLowerCase() === 'black';
-    });
-    var hasMedium = selectedOptions.some(function (o) {
-      return o.toLowerCase() === 'medium';
-    });
+    var hasBlack  = selectedOptions.some(function (o) { return o.toLowerCase() === 'black'; });
+    var hasMedium = selectedOptions.some(function (o) { return o.toLowerCase() === 'medium'; });
 
     var cartPromise;
 
@@ -715,7 +641,7 @@
 
     cartPromise
       .then(function () {
-        setFeedback('✓ Added to cart!', 'is-success');
+        setFeedback('Added to cart!', 'is-success');
         atcBtn.disabled = false;
         refreshCartBubble();
       })
@@ -725,7 +651,6 @@
       });
   });
 
-  /* ── Event Listeners ────────────────────────────────── */
   var section = document.getElementById('gg-grid-' + sectionId);
   if (section) {
     section.addEventListener('click', function (e) {
@@ -747,8 +672,8 @@
   });
 
 }());
-{% endjavascript %}
 
+{% endjavascript %}
 
 {% schema %}
 {
