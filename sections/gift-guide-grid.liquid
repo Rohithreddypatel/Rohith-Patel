@@ -66,57 +66,63 @@
   </div>
 
   <!-- POPUP OVERLAY -->
-  <div
-    class="gg-popup__overlay"
-    id="gg-popup-overlay-{{ section.id }}"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Product quick view"
-    aria-hidden="true"
-  >
-    <div class="gg-popup__box">
+<div
+  class="gg-popup__overlay"
+  id="gg-popup-overlay-{{ section.id }}"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Product quick view"
+  aria-hidden="true"
+>
+  <div class="gg-popup__box">
 
-      <button
-        class="gg-popup__close"
-        id="gg-popup-close-{{ section.id }}"
-        aria-label="Close popup"
-      >
-        &#x2715;
-      </button>
+    <button
+      class="gg-popup__close"
+      id="gg-popup-close-{{ section.id }}"
+      aria-label="Close popup"
+    >
+      &#x2715;
+    </button>
 
+    <!-- Top: image + title + price + description -->
+    <div class="gg-popup__top">
       <div class="gg-popup__image-wrap">
         <img
           class="gg-popup__image"
           id="gg-popup-image-{{ section.id }}"
           src=""
           alt=""
-          width="200"
-          height="200"
+          width="90"
+          height="100"
         >
       </div>
-
-      <div class="gg-popup__details">
+      <div class="gg-popup__info">
         <h3 class="gg-popup__title" id="gg-popup-title-{{ section.id }}"></h3>
         <p class="gg-popup__price" id="gg-popup-price-{{ section.id }}"></p>
         <p class="gg-popup__description" id="gg-popup-desc-{{ section.id }}"></p>
-        <div class="gg-popup__variants" id="gg-popup-variants-{{ section.id }}"></div>
-        <button
-          class="gg-popup__atc-btn"
-          id="gg-popup-atc-{{ section.id }}"
-          aria-label="Add to cart"
-        >
-          <span class="gg-btn__label">ADD TO CART</span>
-          <span class="gg-btn__arrow" aria-hidden="true">→</span>
-        </button>
-        <p
-          class="gg-popup__feedback"
-          id="gg-popup-feedback-{{ section.id }}"
-          aria-live="polite"
-        ></p>
       </div>
-
     </div>
+
+    <!-- Bottom: variants + ATC -->
+    <div class="gg-popup__details">
+      <div class="gg-popup__variants" id="gg-popup-variants-{{ section.id }}"></div>
+      <button
+        class="gg-popup__atc-btn"
+        id="gg-popup-atc-{{ section.id }}"
+        aria-label="Add to cart"
+      >
+        <span class="gg-btn__label">ADD TO CART</span>
+        <span class="gg-btn__arrow" aria-hidden="true">→</span>
+      </button>
+      <p
+        class="gg-popup__feedback"
+        id="gg-popup-feedback-{{ section.id }}"
+        aria-live="polite"
+      ></p>
+    </div>
+
   </div>
+</div>
 
 <script>
   (function () {
@@ -507,7 +513,7 @@
 .gg-popup__box {
   background: #ffffff;
   width: 100%;
-  max-width: 480px;
+  max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
   padding: 0;
@@ -527,33 +533,35 @@
 /* ── Close Button ────────────────────────────────────── */
 .gg-popup__close {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   color: #111111;
   padding: 4px;
   line-height: 1;
   z-index: 10;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.gg-popup__close:hover {
-  opacity: 0.6;
+.gg-popup__close:hover { opacity: 0.6; }
+
+/* ── Popup Top (image + basic info) ─────────────────── */
+.gg-popup__top {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  padding: 20px 20px 0 20px;
+  align-items: flex-start;
 }
 
 /* ── Popup Image ─────────────────────────────────────── */
 .gg-popup__image-wrap {
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
+  width: 90px;
+  height: 100px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .gg-popup__image {
@@ -563,51 +571,57 @@
   display: block;
 }
 
-/* ── Popup Details ───────────────────────────────────── */
-.gg-popup__details {
+/* ── Popup Info (title + price + desc) ──────────────── */
+.gg-popup__info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 20px 24px 24px;
+  gap: 4px;
 }
 
 .gg-popup__title {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #111111;
   margin: 0;
-  padding-right: 24px;
+  padding-right: 20px;
+  line-height: 1.3;
 }
 
 .gg-popup__price {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #111111;
   margin: 0;
 }
 
 .gg-popup__description {
-  font-size: 0.78rem;
-  line-height: 1.6;
+  font-size: 0.72rem;
+  line-height: 1.55;
   color: #666666;
   margin: 0;
+}
+
+/* ── Popup Details (variants + ATC) ─────────────────── */
+.gg-popup__details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 20px 20px;
 }
 
 /* ── Variants ────────────────────────────────────────── */
 .gg-popup__variants {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .gg-variant__label {
   font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: capitalize;
-  letter-spacing: 0.04em;
+  font-weight: 600;
   color: #111111;
-  margin: 0 0 6px;
+  margin: 0 0 5px;
   display: block;
 }
 
@@ -615,27 +629,24 @@
 .gg-variant__color-options {
   display: flex;
   gap: 0;
-  flex-wrap: wrap;
   border: 1.5px solid #cccccc;
   width: fit-content;
 }
 
 .gg-variant__color-btn {
-  padding: 7px 20px;
+  padding: 6px 18px;
   border: none;
   border-right: 1.5px solid #cccccc;
   background: #ffffff;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background var(--gg-transition), color var(--gg-transition);
-  min-width: 70px;
+  min-width: 65px;
   text-align: center;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.gg-variant__color-btn:last-child {
-  border-right: none;
-}
+.gg-variant__color-btn:last-child { border-right: none; }
 
 .gg-variant__color-btn.is-selected {
   background: #111111;
@@ -649,12 +660,11 @@
 /* Size dropdown */
 .gg-variant__size-select {
   width: 100%;
-  padding: 10px 14px;
+  padding: 9px 12px;
   border: 1.5px solid #cccccc;
   background: #ffffff;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   cursor: pointer;
-  appearance: auto;
   color: #111111;
 }
 
@@ -665,36 +675,30 @@
   justify-content: center;
   gap: 12px;
   width: 100%;
-  padding: 16px 24px;
+  padding: 14px 24px;
   background: #111111;
   color: #ffffff;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
-  margin-top: 4px;
   box-sizing: border-box;
 }
 
-.gg-popup__atc-btn:hover {
-  opacity: 0.85;
-}
-
-.gg-popup__atc-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.gg-popup__atc-btn:hover { opacity: 0.85; }
+.gg-popup__atc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Feedback ────────────────────────────────────────── */
 .gg-popup__feedback {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
   margin: 0;
   min-height: 18px;
   text-align: center;
+  padding: 0 20px 12px;
 }
 
 .gg-popup__feedback.is-success { color: #2a7a2a; }
