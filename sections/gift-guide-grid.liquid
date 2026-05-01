@@ -405,7 +405,7 @@
 }
 
 .gg-grid__title {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 400;
   font-style: italic;
   color: #111111;
@@ -455,6 +455,7 @@
   );
 }
 
+/* ── Plus Button ─────────────────────────────────────── */
 .gg-grid__plus-btn {
   position: absolute;
   top: 12px;
@@ -481,10 +482,11 @@
   transform: scale(1.1);
 }
 
+/* ── Popup Overlay ───────────────────────────────────── */
 .gg-popup__overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -501,147 +503,180 @@
   visibility: visible;
 }
 
+/* ── Popup Box ───────────────────────────────────────── */
 .gg-popup__box {
   background: #ffffff;
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   max-height: 90vh;
   overflow-y: auto;
-  padding: 28px;
+  padding: 0;
   box-sizing: border-box;
   position: relative;
   display: flex;
-  flex-direction: row;
-  gap: 24px;
+  flex-direction: column;
   transform: translateY(20px);
   transition: transform 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
 }
 
 .gg-popup__overlay.is-open .gg-popup__box {
   transform: translateY(0);
 }
 
+/* ── Close Button ────────────────────────────────────── */
 .gg-popup__close {
   position: absolute;
-  top: 12px;
+  top: 14px;
   right: 14px;
   background: none;
   border: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   color: #111111;
   padding: 4px;
   line-height: 1;
-  z-index: 2;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gg-popup__close:hover {
   opacity: 0.6;
 }
 
+/* ── Popup Image ─────────────────────────────────────── */
 .gg-popup__image-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
   flex-shrink: 0;
-  width: 160px;
 }
 
 .gg-popup__image {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
 
+/* ── Popup Details ───────────────────────────────────── */
 .gg-popup__details {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+  padding: 20px 24px 24px;
 }
 
 .gg-popup__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+  padding-right: 24px;
+}
+
+.gg-popup__price {
   font-size: 1rem;
   font-weight: 700;
   color: #111111;
   margin: 0;
 }
 
-.gg-popup__price {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #111111;
-  margin: 0;
-}
-
 .gg-popup__description {
   font-size: 0.78rem;
-  line-height: 1.55;
-  color: #555555;
+  line-height: 1.6;
+  color: #666666;
   margin: 0;
 }
 
+/* ── Variants ────────────────────────────────────────── */
 .gg-popup__variants {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .gg-variant__label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: capitalize;
+  letter-spacing: 0.04em;
   color: #111111;
   margin: 0 0 6px;
+  display: block;
 }
 
+/* Color buttons */
 .gg-variant__color-options {
   display: flex;
-  gap: 8px;
+  gap: 0;
   flex-wrap: wrap;
+  border: 1.5px solid #cccccc;
+  width: fit-content;
 }
 
 .gg-variant__color-btn {
-  padding: 6px 16px;
-  border: 1.5px solid #cccccc;
+  padding: 7px 20px;
+  border: none;
+  border-right: 1.5px solid #cccccc;
   background: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background var(--gg-transition), color var(--gg-transition), border-color var(--gg-transition);
+  transition: background var(--gg-transition), color var(--gg-transition);
+  min-width: 70px;
+  text-align: center;
 }
 
-.gg-variant__color-btn.is-selected,
-.gg-variant__color-btn:hover {
+.gg-variant__color-btn:last-child {
+  border-right: none;
+}
+
+.gg-variant__color-btn.is-selected {
   background: #111111;
   color: #ffffff;
-  border-color: #111111;
 }
 
+.gg-variant__color-btn:hover:not(.is-selected) {
+  background: #f5f5f5;
+}
+
+/* Size dropdown */
 .gg-variant__size-select {
   width: 100%;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 1.5px solid #cccccc;
   background: #ffffff;
   font-size: 0.78rem;
   cursor: pointer;
+  appearance: auto;
+  color: #111111;
 }
 
+/* ── Add to Cart Button ──────────────────────────────── */
 .gg-popup__atc-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 13px 24px;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 24px;
   background: #111111;
   color: #ffffff;
   font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  border: 2px solid #111111;
+  border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
-  margin-top: auto;
+  margin-top: 4px;
+  box-sizing: border-box;
 }
 
 .gg-popup__atc-btn:hover {
@@ -653,31 +688,31 @@
   cursor: not-allowed;
 }
 
+/* ── Feedback ────────────────────────────────────────── */
 .gg-popup__feedback {
   font-size: 0.78rem;
   font-weight: 600;
   margin: 0;
-  min-height: 20px;
+  min-height: 18px;
+  text-align: center;
 }
 
 .gg-popup__feedback.is-success { color: #2a7a2a; }
 .gg-popup__feedback.is-error   { color: #cc0000; }
 
+/* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 768px) {
   .gg-grid {
     --gg-grid-cols: 2;
     padding: 32px 16px;
   }
+
   .gg-popup__box {
-    flex-direction: column;
-    padding: 24px 20px;
     max-width: 100%;
   }
+
   .gg-popup__image-wrap {
-    width: 100%;
-  }
-  .gg-popup__image {
-    height: 220px;
+    height: 180px;
   }
 }
 
@@ -689,8 +724,6 @@
 }
 
 {% endstylesheet %}
-
-
 
 {% schema %}
 {
