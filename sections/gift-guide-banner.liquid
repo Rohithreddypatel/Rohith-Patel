@@ -97,27 +97,26 @@
   --gg-topbar-border : #e0e0e0;
   --gg-brand-color   : #111111;
   --gg-tagline-color : #444444;
-  --gg-cta-bg        : #f0e040;   /* yellow */
+  --gg-cta-bg        : #f0e040;
   --gg-cta-color     : #111111;
-  --gg-shop-bg       : #111111;   /* black */
+  --gg-shop-bg       : #111111;
   --gg-shop-color    : #ffffff;
   --gg-ticker-bg     : #111111;
   --gg-ticker-color  : #ffffff;
-  --gg-hero-min-h    : 520px;
+  --gg-hero-min-h    : 780px;
   --gg-transition    : 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
   width: 100%;
   overflow: hidden;
-  font-family: inherit;           /* respects Dawn's font stack */
+  font-family: inherit;
   background: #f5f5f0;
 }
 
-/* ── Top Bar ── */
 .gg-banner__topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 40px;
+  padding: 16px 80px;
   background: var(--gg-topbar-bg);
   border-bottom: 1px solid var(--gg-topbar-border);
   position: relative;
@@ -126,7 +125,7 @@
 }
 
 .gg-banner__brand {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -138,21 +137,20 @@
 .gg-banner__tagline {
   flex: 1;
   text-align: center;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--gg-tagline-color);
   letter-spacing: 0.02em;
   padding: 0 16px;
 }
 
-/* ── Choose Gift CTA (yellow) ── */
 .gg-banner__choose-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
+  padding: 12px 28px;
   background: var(--gg-cta-bg);
   color: var(--gg-cta-color);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -165,7 +163,6 @@
   transition: color var(--gg-transition);
 }
 
-/* Sliding fill animation (shared) */
 .gg-banner__choose-btn::before,
 .gg-banner__shop-btn::before {
   content: '';
@@ -183,7 +180,7 @@
 }
 
 .gg-banner__choose-btn:hover {
-  color: var(--gg-cta-bg);  /* yellow text on dark fill */
+  color: var(--gg-cta-bg);
 }
 
 .gg-btn__label,
@@ -192,17 +189,16 @@
   z-index: 1;
 }
 
-/* Arrow nudge on hover */
 .gg-btn__arrow {
   display: inline-block;
   transition: transform 0.22s ease;
 }
+
 .gg-banner__choose-btn:hover .gg-btn__arrow,
 .gg-banner__shop-btn:hover .gg-btn__arrow {
   transform: translateX(5px);
 }
 
-/* ── Hero Area ── */
 .gg-banner__hero {
   position: relative;
   width: 100%;
@@ -222,7 +218,6 @@
   display: block;
 }
 
-/* Fallback hatch pattern */
 .gg-banner__bg--placeholder {
   background: repeating-linear-gradient(
     45deg,
@@ -233,39 +228,38 @@
   );
 }
 
-/* Content block (bottom-left) */
 .gg-banner__content {
   position: relative;
   z-index: 5;
-  padding: 40px 48px 48px;
-  max-width: 440px;
+  padding: 48px 80px 64px;
+  max-width: 560px;
 }
 
 .gg-banner__heading {
-  font-size: clamp(1.9rem, 3.5vw, 3rem);
+  font-size: clamp(2.5rem, 4vw, 4rem);
   font-weight: 900;
   line-height: 1.08;
   color: var(--gg-brand-color);
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   letter-spacing: -0.02em;
 }
 
 .gg-banner__description {
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   line-height: 1.65;
   color: #333;
-  margin: 0 0 28px;
+  margin: 0 0 32px;
+  max-width: 380px;
 }
 
-/* ── Shop Now CTA (black) ── */
 .gg-banner__shop-btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 28px;
+  padding: 16px 32px;
   background: var(--gg-shop-bg);
   color: var(--gg-shop-color);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -277,19 +271,18 @@
 }
 
 .gg-banner__shop-btn::before {
-  background: #3a3a3a;  /* slightly lighter dark on hover */
+  background: #3a3a3a;
 }
 
 .gg-banner__shop-btn:hover {
   color: var(--gg-shop-color);
 }
 
-/* ── Ticker ── */
 .gg-banner__ticker {
   width: 100%;
   background: var(--gg-ticker-bg);
   color: var(--gg-ticker-color);
-  padding: 10px 0;
+  padding: 12px 0;
   overflow: hidden;
   white-space: nowrap;
   user-select: none;
@@ -298,30 +291,32 @@
 .gg-banner__ticker-track {
   display: inline-flex;
   align-items: center;
-  /* JS sets the exact animation duration based on content width */
   will-change: transform;
 }
 
 .gg-ticker__item {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 0 28px;
+  padding: 0 40px;
 }
 
 .gg-ticker__dot {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   opacity: 0.55;
 }
 
-/* Keyframe is added dynamically by JS for correct offset */
 @keyframes gg-ticker-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(var(--gg-ticker-offset, -50%)); }
 }
 
-/* ── Responsive ── */
+@media (max-width: 1200px) {
+  .gg-banner__topbar { padding: 14px 48px; }
+  .gg-banner__content { padding: 40px 48px 56px; }
+}
+
 @media (max-width: 768px) {
   .gg-banner__topbar {
     flex-direction: column;
@@ -329,32 +324,15 @@
     gap: 10px;
     text-align: center;
   }
-
-  .gg-banner__tagline {
-    padding: 0;
-    font-size: 0.78rem;
-  }
-
-  .gg-banner__hero {
-    min-height: 380px;
-    align-items: center;
-  }
-
-  .gg-banner__content {
-    padding: 28px 24px 36px;
-    max-width: 100%;
-  }
-
-  .gg-banner__heading {
-    font-size: 1.75rem;
-  }
+  .gg-banner__hero { min-height: 420px; align-items: center; }
+  .gg-banner__content { padding: 28px 24px 36px; max-width: 100%; }
+  .gg-banner__heading { font-size: 2rem; }
 }
 
 @media (max-width: 480px) {
-  .gg-banner__heading {
-    font-size: 1.5rem;
-  }
+  .gg-banner__heading { font-size: 1.6rem; }
 }
+
 {% endstylesheet %}
 
 
