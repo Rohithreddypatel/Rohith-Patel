@@ -66,65 +66,65 @@
   </div>
 
   <!-- POPUP OVERLAY -->
-<div
-  class="gg-popup__overlay"
-  id="gg-popup-overlay-{{ section.id }}"
-  role="dialog"
-  aria-modal="true"
-  aria-label="Product quick view"
-  aria-hidden="true"
->
-  <div class="gg-popup__box">
+  <div
+    class="gg-popup__overlay"
+    id="gg-popup-overlay-{{ section.id }}"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Product quick view"
+    aria-hidden="true"
+  >
+    <div class="gg-popup__box">
 
-    <button
-      class="gg-popup__close"
-      id="gg-popup-close-{{ section.id }}"
-      aria-label="Close popup"
-    >
-      &#x2715;
-    </button>
-
-    <!-- Top: image + title + price + description -->
-    <div class="gg-popup__top">
-      <div class="gg-popup__image-wrap">
-        <img
-          class="gg-popup__image"
-          id="gg-popup-image-{{ section.id }}"
-          src=""
-          alt=""
-          width="90"
-          height="100"
-        >
-      </div>
-      <div class="gg-popup__info">
-        <h3 class="gg-popup__title" id="gg-popup-title-{{ section.id }}"></h3>
-        <p class="gg-popup__price" id="gg-popup-price-{{ section.id }}"></p>
-        <p class="gg-popup__description" id="gg-popup-desc-{{ section.id }}"></p>
-      </div>
-    </div>
-
-    <!-- Bottom: variants + ATC -->
-    <div class="gg-popup__details">
-      <div class="gg-popup__variants" id="gg-popup-variants-{{ section.id }}"></div>
       <button
-        class="gg-popup__atc-btn"
-        id="gg-popup-atc-{{ section.id }}"
-        aria-label="Add to cart"
+        class="gg-popup__close"
+        id="gg-popup-close-{{ section.id }}"
+        aria-label="Close popup"
       >
-        <span class="gg-btn__label">ADD TO CART</span>
-        <span class="gg-btn__arrow" aria-hidden="true">→</span>
+        &#x2715;
       </button>
-      <p
-        class="gg-popup__feedback"
-        id="gg-popup-feedback-{{ section.id }}"
-        aria-live="polite"
-      ></p>
+
+      <!-- Top: image + title + price + description -->
+      <div class="gg-popup__top">
+        <div class="gg-popup__image-wrap">
+          <img
+            class="gg-popup__image"
+            id="gg-popup-image-{{ section.id }}"
+            src=""
+            alt=""
+            width="120"
+            height="140"
+          >
+        </div>
+        <div class="gg-popup__info">
+          <h3 class="gg-popup__title" id="gg-popup-title-{{ section.id }}"></h3>
+          <p class="gg-popup__price" id="gg-popup-price-{{ section.id }}"></p>
+          <p class="gg-popup__description" id="gg-popup-desc-{{ section.id }}"></p>
+        </div>
+      </div>
+
+      <!-- Bottom: variants + ATC -->
+      <div class="gg-popup__details">
+        <div class="gg-popup__variants" id="gg-popup-variants-{{ section.id }}"></div>
+        <button
+          class="gg-popup__atc-btn"
+          id="gg-popup-atc-{{ section.id }}"
+          aria-label="Add to cart"
+        >
+          <span class="gg-btn__label">ADD TO CART</span>
+          <span class="gg-btn__arrow" aria-hidden="true">→</span>
+        </button>
+        <p
+          class="gg-popup__feedback"
+          id="gg-popup-feedback-{{ section.id }}"
+          aria-live="polite"
+        ></p>
+      </div>
+
     </div>
-
   </div>
-</div>
 
-<script>
+  <script>
   (function () {
     'use strict';
 
@@ -142,8 +142,7 @@
     var activeVariants = [];
     var activeOptions  = [];
 
-    /* ── Open / Close ─────────────────────────────────────── */
-
+    /* ── Open Popup ───────────────────────────────────────── */
     function openPopup(btn) {
       try {
         activeVariants = JSON.parse(btn.dataset.productVariants);
@@ -166,14 +165,14 @@
       setTimeout(function () { closeBtn.focus(); }, 50);
     }
 
+    /* ── Close Popup ──────────────────────────────────────── */
     function closePopup() {
       overlay.setAttribute('aria-hidden', 'true');
       overlay.classList.remove('is-open');
       document.body.style.overflow = '';
     }
 
-    /* ── Render variant selectors ─────────────────────────── */
-
+    /* ── Render Variants ──────────────────────────────────── */
     function renderVariants() {
       popupVars.innerHTML = '';
       activeOptions.forEach(function (option) {
@@ -207,15 +206,15 @@
           wrapper.appendChild(btnGroup);
 
         } else {
-          var select                  = document.createElement('select');
-          select.className            = 'gg-variant__size-select';
-          select.dataset.optionName   = option.name;
+          var select                = document.createElement('select');
+          select.className          = 'gg-variant__size-select';
+          select.dataset.optionName = option.name;
 
-          var placeholder             = document.createElement('option');
-          placeholder.value           = '';
-          placeholder.textContent     = 'Choose your ' + option.name.toLowerCase();
-          placeholder.disabled        = true;
-          placeholder.selected        = true;
+          var placeholder           = document.createElement('option');
+          placeholder.value         = '';
+          placeholder.textContent   = 'Choose your ' + option.name.toLowerCase();
+          placeholder.disabled      = true;
+          placeholder.selected      = true;
           select.appendChild(placeholder);
 
           option.values.forEach(function (value) {
@@ -230,8 +229,7 @@
       });
     }
 
-    /* ── Read selected options ────────────────────────────── */
-
+    /* ── Get Selected Options ─────────────────────────────── */
     function getSelectedOptions() {
       var results = [];
       activeOptions.forEach(function (option) {
@@ -249,16 +247,12 @@
       return results;
     }
 
-    /* ── Match variant ID from selected options ───────────── */
-
+    /* ── Get Selected Variant ID ──────────────────────────── */
     function getSelectedVariantId() {
       var selectedOptions = getSelectedOptions();
-
-      // Reject if any option is still unselected
       if (selectedOptions.some(function (o) { return o === '' || o === null; })) {
         return null;
       }
-
       var match = activeVariants.find(function (variant) {
         return variant.options.every(function (opt, i) {
           return opt === selectedOptions[i];
@@ -267,9 +261,7 @@
       return match ? match.id : null;
     }
 
-    /* ── Cart fetch ───────────────────────────────────────── */
-
-    // FIX: takes variantId (number) + quantity directly — not an items array
+    /* ── Add to Cart via AJAX ─────────────────────────────── */
     function addToCart(variantId, quantity) {
       return fetch('/cart/add.js', {
         method: 'POST',
@@ -281,8 +273,7 @@
       });
     }
 
-    /* ── Special rule: fetch Soft Winter Jacket Black/Medium variant ── */
-
+    /* ── Get Soft Winter Jacket Variant (Black + Medium) ──── */
     function getSoftWinterJacketVariantId() {
       return fetch('/products/soft-winter-jacket.js')
         .then(function (res) {
@@ -299,15 +290,13 @@
         .catch(function () { return null; });
     }
 
-    /* ── UI feedback ──────────────────────────────────────── */
-
+    /* ── Feedback Message ─────────────────────────────────── */
     function setFeedback(message, type) {
       feedback.textContent = message;
       feedback.className   = 'gg-popup__feedback ' + type;
     }
 
-    /* ── Refresh cart icon bubble in header ───────────────── */
-
+    /* ── Refresh Dawn Cart Bubble ─────────────────────────── */
     function refreshCartBubble() {
       fetch('/?section_id=cart-icon-bubble')
         .then(function (r) { return r.text(); })
@@ -322,8 +311,7 @@
         .catch(function () { /* non-critical */ });
     }
 
-    /* ── Add to Cart button click ─────────────────────────── */
-
+    /* ── Add to Cart Click Handler ────────────────────────── */
     atcBtn.addEventListener('click', function () {
       var selectedOptions = getSelectedOptions();
       var variantId       = getSelectedVariantId();
@@ -336,7 +324,7 @@
       atcBtn.disabled = true;
       setFeedback('Adding...', '');
 
-      // Special rule: Black + Medium → also add Soft Winter Jacket automatically
+      /* Special rule: Black + Medium → also add Soft Winter Jacket */
       var hasBlack  = selectedOptions.some(function (o) { return o.toLowerCase() === 'black'; });
       var hasMedium = selectedOptions.some(function (o) { return o.toLowerCase() === 'medium'; });
 
@@ -344,9 +332,7 @@
 
       if (hasBlack && hasMedium) {
         cartPromise = addToCart(variantId, 1)
-          .then(function () {
-            return getSoftWinterJacketVariantId();
-          })
+          .then(function () { return getSoftWinterJacketVariantId(); })
           .then(function (jacketId) {
             if (jacketId) return addToCart(jacketId, 1);
           });
@@ -367,8 +353,7 @@
         });
     });
 
-    /* ── Grid click → open popup ──────────────────────────── */
-
+    /* ── Grid Click → Open Popup ──────────────────────────── */
     var gridSection = document.getElementById('gg-grid-' + sectionId);
     if (gridSection) {
       gridSection.addEventListener('click', function (e) {
@@ -377,8 +362,7 @@
       });
     }
 
-    /* ── Close handlers ───────────────────────────────────── */
-
+    /* ── Close Handlers ───────────────────────────────────── */
     closeBtn.addEventListener('click', closePopup);
 
     overlay.addEventListener('click', function (e) {
@@ -392,30 +376,35 @@
     });
 
   }());
-</script>
+  </script>
 
 </section>
 
 {% stylesheet %}
 
+/* ============================================================
+   Gift Guide Grid — Scoped Styles
+   Fixed for 1920x1080 screens to match Figma design
+   ============================================================ */
+
 .gg-grid {
   --gg-grid-gap   : 30px;
   --gg-grid-cols  : 3;
-  --gg-plus-size  : 36px;
+  --gg-plus-size  : 40px;
   --gg-transition : 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
-  max-width: 1337px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 60px 80px;
   box-sizing: border-box;
 }
 
 .gg-grid__title {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 400;
   font-style: italic;
   color: #111111;
-  margin: 0 0 20px 0;
+  margin: 0 0 24px 0;
 }
 
 .gg-grid__container {
@@ -464,15 +453,15 @@
 /* ── Plus Button ─────────────────────────────────────── */
 .gg-grid__plus-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 16px;
+  right: 16px;
   width: var(--gg-plus-size);
   height: var(--gg-plus-size);
   border-radius: 50%;
   background: #ffffff;
   color: #111111;
   border: 1.5px solid #cccccc;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -521,7 +510,7 @@
   flex-direction: column;
   transform: translateY(20px);
   transition: transform 0.3s ease;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
 }
 
 .gg-popup__overlay.is-open .gg-popup__box {
@@ -545,7 +534,7 @@
 
 .gg-popup__close:hover { opacity: 0.6; }
 
-/* ── Popup Top ───────────────────────────────────────── */
+/* ── Popup Top (image + info side by side) ───────────── */
 .gg-popup__top {
   display: flex;
   flex-direction: row;
@@ -554,7 +543,7 @@
   align-items: flex-start;
 }
 
-/* ── Image ───────────────────────────────────────────── */
+/* ── Product Image ───────────────────────────────────── */
 .gg-popup__image-wrap {
   width: 120px;
   height: 140px;
@@ -569,7 +558,7 @@
   display: block;
 }
 
-/* ── Info ────────────────────────────────────────────── */
+/* ── Product Info ────────────────────────────────────── */
 .gg-popup__info {
   flex: 1;
   display: flex;
@@ -601,7 +590,7 @@
   margin: 0;
 }
 
-/* ── Details ─────────────────────────────────────────── */
+/* ── Popup Details (variants + ATC) ─────────────────── */
 .gg-popup__details {
   display: flex;
   flex-direction: column;
@@ -624,12 +613,12 @@
   display: block;
 }
 
-/* Color buttons — 271px wide, 64px tall total */
+/* Color buttons */
 .gg-variant__color-options {
   display: flex;
   width: 271px;
-  border: 1.5px solid #cccccc;
   height: 36px;
+  border: 1.5px solid #cccccc;
   box-sizing: border-box;
 }
 
@@ -647,9 +636,7 @@
   height: 100%;
 }
 
-.gg-variant__color-btn:last-child {
-  border-right: none;
-}
+.gg-variant__color-btn:last-child { border-right: none; }
 
 .gg-variant__color-btn.is-selected {
   background: #111111;
@@ -660,7 +647,7 @@
   background: #f5f5f5;
 }
 
-/* Size dropdown — 271px wide, 45px tall */
+/* Size dropdown */
 .gg-variant__size-select {
   width: 271px;
   height: 45px;
@@ -710,8 +697,15 @@
 .gg-popup__feedback.is-error   { color: #cc0000; }
 
 /* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .gg-grid { padding: 48px 48px; }
+}
+
 @media (max-width: 768px) {
-  .gg-grid { --gg-grid-cols: 2; padding: 32px 16px; }
+  .gg-grid {
+    --gg-grid-cols: 2;
+    padding: 32px 16px;
+  }
 
   .gg-popup__box {
     width: 100%;
@@ -725,7 +719,10 @@
 }
 
 @media (max-width: 480px) {
-  .gg-grid { --gg-grid-cols: 2; --gg-grid-gap: 12px; }
+  .gg-grid {
+    --gg-grid-cols: 2;
+    --gg-grid-gap: 12px;
+  }
 }
 
 {% endstylesheet %}
